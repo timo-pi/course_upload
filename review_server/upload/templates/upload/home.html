@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<h1>Home</h1>
+  {% load static %}
+<img src="{% static 'upload/creature-sheet.png' %}" alt="creatures">
+{% for course in courses %}
+{{ course.title }} <br>
+<a href="{{ course.file.url }}">Start Course</a>
+<br><br>
+-------------------------------------------------------------
+<br><br>
+{% endfor%}
+</body>
+</html>

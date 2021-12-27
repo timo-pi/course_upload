@@ -1,0 +1,6 @@
+Django==3.2.9
+django-contrib-comments==2.1.0
+django-filebrowser==3.14.1
+django-grappelli==2.15.3
+Pillow==8.4.0
+
