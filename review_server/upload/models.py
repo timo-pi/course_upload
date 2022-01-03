@@ -6,17 +6,19 @@ import sys, zipfile, os, os.path
 import shutil
 from django.conf import settings
 from zipfile import ZipFile
+import glob
 
 class Course(models.Model):
+
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
-    course_image = models.ImageField(storage=OverwriteStorage(), upload_to='./images/')
-    #course_image = models.ImageField(upload_to='./images/')
     deletion_date = models.DateField()
     description = models.CharField(max_length=300)
-    zip_file = models.FileField(upload_to='./courses/')
     file = FileBrowseField("File", max_length=200, directory="shells/",  blank=True,
-        null=True,help_text="Upload a video/image/swf, zipped slideshow, etc.")
+        null=True, help_text="Upload a SCORM Zip-File")
+    path = models.CharField(max_length=200, editable=False)
+
+    extract_path = ''
 
     def post_upload_callback(sender, **kwargs):
         """
@@ -28,15 +30,15 @@ class Course(models.Model):
         print("****** FILEBROWSER CALLBACK TRIGGERED ********")
         print(kwargs)
         print('####################################')
+
         if kwargs['file'].extension == ".zip":
             # Note: this doesn't test for corrupt zip files.
             # If encountered, user will get an HTTP Error
             # and file will remain on the server.
-
             # We get returned relative path names from Filebrowser
+
             path = kwargs['path']
             thefile = kwargs['file']
-            print("************** " + str(path))
             print("************** " + str(thefile))
             # Convert file and dir into absolute paths
             fullpath = os.path.join(settings.MEDIA_ROOT, str(thefile))
@@ -44,11 +46,20 @@ class Course(models.Model):
 
             with ZipFile(fullpath, 'r') as zipObj:
                 # Extract all the contents of zip file in current directory
-                extract_path = os.path.join(settings.MEDIA_ROOT, str(thefile))
+                global extract_path
+                extract_path = os.path.join(settings.UNZIP_ROOT, str(thefile))
                 # extract_path = os.path.join(settings.MEDIA_ROOT[:21], "test", str(thefile)[:-4])
-                print("++++++++++++ " + extract_path[:-4])
                 zipObj.extractall(extract_path[:-4])
-                # zipObj.extractall(extract_path)
+
+    def save(self, *args, **kwargs):
+        os.chdir(extract_path[:-4])
+        for file in glob.glob("*.html"):
+            print(file)
+
+        self.path = extract_path[:-4]
+        super().save(*args, **kwargs)
 
     # Signal provided by FileBrowser on every successful upload.
     filebrowser_post_upload.connect(post_upload_callback)
+
+

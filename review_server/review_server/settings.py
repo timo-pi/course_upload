@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+BASE_URL = 'https://review.schwarz'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -128,8 +128,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+UNZIP_ROOT = '/Users/timopiechotta/unzip/'
+MEDIA_ROOT = '/Users/timopiechotta/media/'
 MEDIA_URL = '/media/'
+
+FILEBROWSER_MAX_UPLOAD_SIZE = 1024000000
+FILEBROWSER_CONVERT_FILENAME = True
+FILEBROWSER_LIST_PER_PAGE = 10
 
 FILEBROWSER_SELECT_FORMATS = {
     'file': ['File'],
@@ -146,3 +152,6 @@ FILEBROWSER_EXTENSIONS = {
     # 'Audio': ['.mp3','.mp4','.wav','.aiff','.midi','.m4p']
     'File': ['.zip']
 }
+
+# FILEBROWSER_DIRECTORY = '/Users/timopiechotta/uploads'
+# DIRECTORY = '/Users/timopiechotta/uploads'

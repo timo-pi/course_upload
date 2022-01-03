@@ -8,10 +8,10 @@
 <body>
 <h1>Home</h1>
   {% load static %}
-<img src="{% static 'upload/creature-sheet.png' %}" alt="creatures">
+
 {% for course in courses %}
 {{ course.title }} <br>
-<a href="{{ course.file.url }}">Start Course</a>
+<a href="{{ course.path }}">Start Course</a>
 <br><br>
 -------------------------------------------------------------
 <br><br>
